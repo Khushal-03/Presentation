@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Introduction to React.js</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Roboto Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #0b1120;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      background-color: #0b1120;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      font-family: "Roboto", sans-serif;
+      overflow: hidden;
+      flex-shrink: 0;
+      transform-origin: center center;
+      transition: transform 0.2s ease;
+    }
+
+    /* Hides the fullscreen button whenever the page/element is in fullscreen */
+    :fullscreen #fullscreenBtn,
+    :-webkit-full-screen #fullscreenBtn {
+      display: none !important;
+    }
+
+    .text-react-cyan {
+      color: #61dafb;
+    }
+
+    .bg-react-cyan {
+      background-color: #61dafb;
+    }
+
+    .border-react-cyan {
+      border-color: #61dafb;
+    }
+
+    /* Background Symbol Slow Spin & Subtle Breathing */
+    .react-symbol {
+      font-size: 260px;
+      color: #61dafb;
+      opacity: 0.035;
+      display: inline-block;
+      animation: ambientSpin 30s linear infinite, symbolPulse 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientSpin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes symbolPulse {
+      0% {
+        opacity: 0.03;
+        filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+      }
+
+      100% {
+        opacity: 0.07;
+        filter: drop-shadow(0 0 35px rgba(97, 218, 251, 0.25));
+      }
+    }
+
+    /* Left Section Entrance */
+    .left-entry {
+      animation: fadeInLeft 0.7s ease-out both;
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Header Accent Bar Pulse */
+    .cyan-bar-pulse {
+      animation: barPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes barPulse {
+      0% {
+        box-shadow: 0 0 4px rgba(97, 218, 251, 0.4);
+      }
+
+      100% {
+        box-shadow: 0 0 16px rgba(97, 218, 251, 0.9);
+      }
+    }
+
+    /* Feature Cards Staggered Slide In */
+    .feature-card {
+      opacity: 0;
+      animation: cardFadeIn 0.5s ease-out forwards;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .delay-card-1 {
+      animation-delay: 0.12s;
+    }
+
+    .delay-card-2 {
+      animation-delay: 0.24s;
+    }
+
+    .delay-card-3 {
+      animation-delay: 0.36s;
+    }
+
+    .delay-card-4 {
+      animation-delay: 0.48s;
+    }
+
+    /* Interactive Hover Polish */
+    .feature-card:hover {
+      transform: translateY(-4px) translateX(3px);
+      border-color: rgba(97, 218, 251, 0.45);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(97, 218, 251, 0.08);
+    }
+
+    .feature-card:hover .icon-circle {
+      transform: scale(1.08);
+      background-color: rgba(97, 218, 251, 0.18);
+      box-shadow: 0 0 14px rgba(97, 218, 251, 0.3);
+    }
+
+    .icon-circle {
+      transition: all 0.25s ease;
+    }
+
+    /* ================= FULLSCREEN GPU FIX ================= */
+
+    /* 1. Force GPU compositor to never freeze animations in fullscreen */
+    .flow-card,
+    .concept-card,
+    .summary-card,
+    .interactive-card,
+    .step-badge,
+    .point-num,
+    .bulb-glow,
+    .final-step-glow,
+    .step-4-glow {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform, box-shadow, border-color, opacity;
+    }
+
+    /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+    .point-num,
+    .hook-number {
+      display: inline-block;
+      animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes numberGlowPulse {
+      0% {
+        text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+        color: #61DAFB;
+      }
+
+      100% {
+        text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+        color: #ffffff;
+      }
+    }
+
+    /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+    .final-step-glow,
+    .step-4-glow {
+      animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes cardBlinkPulse {
+      0% {
+        border-color: rgba(97, 218, 251, 0.2);
+        box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+      }
+
+      50% {
+        border-color: rgba(97, 218, 251, 0.7);
+        box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+      }
+
+      100% {
+        border-color: rgba(97, 218, 251, 0.35);
+        box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slide-container" id="slide">
+
+    <!-- Top Accent -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-react-cyan z-30 shadow-[0_0_10px_rgba(97,218,251,0.5)]"></div>
+
+    <!-- Main Layout -->
+    <div class="flex h-full w-full">
+
+      <!-- LEFT SECTION -->
+      <div class="w-5/12 h-full relative flex flex-col justify-center px-16 z-20">
+
+        <!-- Decorative React Background with Slow Spin -->
+        <div class="absolute -left-16 top-1/2 transform -translate-y-1/2 z-0 pointer-events-none">
+          <i class="fa-brands fa-react react-symbol"></i>
+        </div>
+
+        <div class="left-entry relative z-10">
+
+          <!-- Small Heading -->
+          <div class="flex items-center mb-6">
+
+            <div class="w-12 h-12 rounded-lg
+                   bg-[#61DAFB]/10
+                   border border-[#61DAFB]/20
+                   flex items-center justify-center
+                   text-react-cyan mr-4 shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+              <i class="fa-solid fa-circle-info text-2xl"></i>
+            </div>
+
+            <p class="text-sm font-bold text-slate-400
+                   uppercase tracking-widest">
+              Overview
+            </p>
+
+          </div>
+
+          <!-- Main Heading -->
+          <h1 class="text-6xl font-black text-white
+                 mb-8 leading-tight">
+            Introduction to
+            <br />
+
+            <span class="text-react-cyan drop-shadow-[0_0_18px_rgba(97,218,251,0.3)]">
+              React.js
+            </span>
+          </h1>
+
+          <!-- Description -->
+          <div class="space-y-6">
+
+            <p class="text-xl text-slate-300
+                   leading-relaxed
+                   border-l-4 border-react-cyan
+                   pl-6">
+              React.js is a
+              <strong class="text-white">
+                JavaScript library
+              </strong>
+              used to build interactive and dynamic user interfaces.
+            </p>
+
+            <!-- Created By -->
+            <div class="flex items-center
+                   p-4
+                   bg-[#0f172a]
+                   rounded-lg
+                   border border-slate-800
+                   w-max transition-transform hover:-translate-y-1">
+
+              <i class="fa-brands fa-react
+                     text-3xl
+                     text-react-cyan
+                     mr-4 animate-spin" style="animation-duration: 16s;"></i>
+
+              <div>
+
+                <p class="text-xs text-slate-500
+                       uppercase font-bold">
+                  Built With
+                </p>
+
+                <p class="text-slate-200 font-medium">
+                  JavaScript
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT SECTION -->
+      <div class="w-7/12 h-full
+             bg-[#0f172a]
+             relative
+             flex flex-col
+             justify-center
+             px-16
+             z-10">
+
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 z-0 opacity-20" style="
+          background-image:
+            radial-gradient(#64748b 1px, transparent 1px);
+          background-size: 24px 24px;
+        "></div>
+
+        <div class="relative z-10">
+
+          <!-- Section Heading -->
+          <h2 class="text-3xl font-bold
+                 text-white
+                 mb-8
+                 flex items-center">
+
+            <span class="cyan-bar-pulse bg-react-cyan
+                   w-2 h-8
+                   mr-4
+                   rounded-full"></span>
+
+            What I Learned About React
+
+          </h2>
+
+          <div class="grid grid-cols-1 gap-5">
+
+            <!-- Feature 1 -->
+            <div class="feature-card delay-card-1
+                   bg-[#0b1120]
+                   p-5
+                   rounded-xl
+                   border border-slate-800
+                   flex items-start">
+
+              <div class="icon-circle w-12 h-12
+                     rounded-full
+                     bg-[#61DAFB]/10
+                     flex items-center
+                     justify-center
+                     text-react-cyan
+                     flex-shrink-0
+                     mr-5">
+                <i class="fa-solid fa-code text-lg"></i>
+              </div>
+
+              <div>
+
+                <h3 class="text-xl font-bold
+                       text-white
+                       mb-1">
+                  JavaScript Library
+                </h3>
+
+                <p class="text-slate-400">
+                  React is built on JavaScript and helps developers
+                  create modern and interactive user interfaces.
+                </p>
+
+              </div>
+
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card delay-card-2
+                   bg-[#0b1120]
+                   p-5
+                   rounded-xl
+                   border border-slate-800
+                   flex items-start">
+
+              <div class="icon-circle w-12 h-12
+                     rounded-full
+                     bg-[#61DAFB]/10
+                     flex items-center
+                     justify-center
+                     text-react-cyan
+                     flex-shrink-0
+                     mr-5">
+                <i class="fa-solid fa-cubes text-lg"></i>
+              </div>
+
+              <div>
+
+                <h3 class="text-xl font-bold
+                       text-white
+                       mb-1">
+                  Component Based
+                </h3>
+
+                <p class="text-slate-400">
+                  Applications can be divided into small,
+                  reusable components that are easier to manage.
+                </p>
+
+              </div>
+
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card delay-card-3
+                   bg-[#0b1120]
+                   p-5
+                   rounded-xl
+                   border border-slate-800
+                   flex items-start">
+
+              <div class="icon-circle w-12 h-12
+                     rounded-full
+                     bg-[#61DAFB]/10
+                     flex items-center
+                     justify-center
+                     text-react-cyan
+                     flex-shrink-0
+                     mr-5">
+                <i class="fa-solid fa-puzzle-piece text-lg"></i>
+              </div>
+
+              <div>
+
+                <h3 class="text-xl font-bold
+                       text-white
+                       mb-1">
+                  Reusable UI
+                </h3>
+
+                <p class="text-slate-400">
+                  The same component can be reused in different
+                  parts of an application, reducing duplicate code.
+                </p>
+
+              </div>
+
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card delay-card-4
+                   bg-[#0b1120]
+                   p-5
+                   rounded-xl
+                   border border-slate-800
+                   flex items-start">
+
+              <div class="icon-circle w-12 h-12
+                     rounded-full
+                     bg-[#61DAFB]/10
+                     flex items-center
+                     justify-center
+                     text-react-cyan
+                     flex-shrink-0
+                     mr-5">
+                <i class="fa-solid fa-bolt text-lg"></i>
+              </div>
+
+              <div>
+
+                <h3 class="text-xl font-bold
+                       text-white
+                       mb-1">
+                  Interactive Applications
+                </h3>
+
+                <p class="text-slate-400">
+                  React makes it easier to update the UI when
+                  application data or user actions change.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

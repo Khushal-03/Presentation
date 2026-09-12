@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JSX & Components</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #020617;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 30px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Left Side Fade In */
+        .left-entry {
+            animation: fadeInLeft 0.65s ease-out both;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Puzzle Icon Subtle Float */
+        .puzzle-pulse {
+            display: inline-block;
+            animation: puzzleDrift 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes puzzleDrift {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            100% {
+                transform: rotate(8deg) scale(1.08);
+            }
+        }
+
+        /* Right Section Staggered Cards Entrance */
+        .content-card {
+            opacity: 0;
+            animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.12s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.28s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(97, 218, 251, 0.45);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 18px rgba(97, 218, 251, 0.08);
+        }
+
+        .content-card:hover .icon-circle {
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.35);
+        }
+
+        .icon-circle {
+            transition: all 0.22s ease;
+        }
+
+        /* Code Box Glow */
+        .code-box {
+            font-family: monospace;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .code-box:hover {
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 0 16px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Component Blocks Staggered Pop */
+        .comp-block {
+            opacity: 0;
+            animation: compSnap 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        @keyframes compSnap {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .delay-comp-1 {
+            animation-delay: 0.36s;
+        }
+
+        .delay-comp-2 {
+            animation-delay: 0.44s;
+        }
+
+        .delay-comp-3 {
+            animation-delay: 0.52s;
+        }
+
+        .comp-block:hover {
+            transform: translateY(-3px);
+            border-color: rgba(97, 218, 251, 0.5);
+            background: rgba(30, 41, 59, 0.9);
+            box-shadow: 0 4px 14px rgba(97, 218, 251, 0.12);
+        }
+
+        /* Bottom Takeaway Arrow Bounce */
+        .arrow-indicator {
+            animation: arrowSlide 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowSlide {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(4px);
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* Key Idea Card Hover */
+        .idea-card {
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .idea-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 16px rgba(97, 218, 251, 0.08);
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slide-container" id="slide">
+
+        <!-- Top Accent -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-[#61DAFB] z-30 shadow-[0_0_12px_rgba(97,218,251,0.5)]"></div>
+
+        <!-- Main Layout -->
+        <div class="flex h-full w-full">
+
+            <!-- ================= LEFT SECTION ================= -->
+            <div class="w-5/12 h-full bg-[#0b1120]
+                   relative flex flex-col justify-center
+                   px-16 z-20 border-r border-slate-800">
+
+                <!-- Decorative React Logo with Ambient Spin -->
+                <div class="absolute -left-24 top-1/2
+                       transform -translate-y-1/2
+                       z-0 pointer-events-none">
+                    <i class="fab fa-react react-bg-symbol text-[420px] text-[#61DAFB]"></i>
+                </div>
+
+                <div class="left-entry relative z-10">
+
+                    <!-- Label -->
+                    <div class="flex items-center mb-6">
+
+                        <div class="w-12 h-12 rounded-lg
+                               bg-[#61DAFB]/10
+                               border border-[#61DAFB]/20
+                               flex items-center justify-center
+                               text-[#61DAFB] mr-4 shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+                            <i class="puzzle-pulse fas fa-puzzle-piece text-2xl"></i>
+                        </div>
+
+                        <p class="text-sm font-bold text-slate-500
+                               uppercase tracking-widest">
+                            Core Concepts
+                        </p>
+
+                    </div>
+
+                    <!-- Heading -->
+                    <h1 class="text-6xl font-black text-white
+                           mb-8 leading-tight">
+                        JSX &
+                        <br>
+                        <span class="text-[#61DAFB] drop-shadow-[0_0_18px_rgba(97,218,251,0.25)]">Components</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-xl text-slate-300
+                           leading-relaxed
+                           border-l-4 border-[#61DAFB]
+                           pl-6 mb-8">
+                        JSX allows us to write UI using a
+                        JavaScript-like syntax, while components
+                        help us divide the application into
+                        reusable parts.
+                    </p>
+
+                    <!-- Key Idea -->
+                    <div class="idea-card bg-[#0f172a]
+                           rounded-xl p-6
+                           border border-slate-800">
+
+                        <div class="flex items-start mb-3">
+
+                            <i class="fas fa-lightbulb
+                                   text-[#61DAFB]
+                                   text-xl mt-1 mr-3"></i>
+
+                            <p class="text-lg font-bold text-white">
+                                Key Idea
+                            </p>
+
+                        </div>
+
+                        <p class="text-slate-400
+                               text-sm leading-relaxed">
+                            Build small UI pieces as components
+                            and combine them to create a complete
+                            application.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= RIGHT SECTION ================= -->
+            <div class="w-7/12 h-full bg-[#0f172a]
+                   relative flex flex-col
+                   justify-center px-12 z-10">
+
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 z-0 opacity-20" style="
+                    background-image:
+                    radial-gradient(#475569 1px, transparent 1px);
+                    background-size: 24px 24px;
+                "></div>
+
+                <div class="relative z-10
+                       h-full flex flex-col
+                       justify-center py-10">
+
+                    <!-- Section Heading -->
+                    <h2 class="text-3xl font-bold
+                           text-white mb-6
+                           flex items-center">
+
+                        <span class="bg-[#61DAFB]
+                               w-2 h-8 mr-4 rounded-full shadow-[0_0_12px_rgba(97,218,251,0.6)]"></span>
+
+                        What I Learned
+
+                    </h2>
+
+                    <!-- JSX Card -->
+                    <div class="content-card delay-card-1
+                           bg-[#0b1120]
+                           border border-slate-800
+                           rounded-xl p-5 mb-5">
+
+                        <div class="flex items-center mb-3">
+
+                            <div class="icon-circle w-10 h-10 rounded-full
+                                   bg-[#61DAFB]/10
+                                   flex items-center justify-center
+                                   text-[#61DAFB] mr-4">
+                                <i class="fas fa-code"></i>
+                            </div>
+
+                            <p class="text-xl font-bold text-white">
+                                JSX
+                            </p>
+
+                        </div>
+
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            JSX lets us write HTML-like elements
+                            directly inside JavaScript and makes
+                            React UI easier to read and understand.
+                        </p>
+
+                        <!-- Code Example with Syntax Accents -->
+                        <div class="code-box
+                               bg-[#020617]
+                               border border-slate-800
+                               rounded-lg px-4 py-3
+                               text-sm shadow-inner">
+                            <span class="text-purple-400">
+                                const
+                            </span>
+
+                            <span class="text-[#61DAFB]">
+                                element
+                            </span>
+
+                            <span class="text-slate-400">
+                                =
+                            </span>
+
+                            <span class="text-emerald-300">
+                                &lt;<span class="text-red-400">h1</span>&gt;Hello React&lt;/<span
+                                    class="text-red-400">h1</span>&gt;
+                            </span><span class="text-slate-400">;</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Components Card -->
+                    <div class="content-card delay-card-2
+                           bg-[#0b1120]
+                           border border-slate-800
+                           rounded-xl p-5">
+
+                        <div class="flex items-center mb-3">
+
+                            <div class="icon-circle w-10 h-10 rounded-full
+                                   bg-[#61DAFB]/10
+                                   flex items-center justify-center
+                                   text-[#61DAFB] mr-4">
+                                <i class="fas fa-cubes"></i>
+                            </div>
+
+                            <p class="text-xl font-bold text-white">
+                                Components
+                            </p>
+
+                        </div>
+
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            Components are independent and reusable
+                            building blocks of a React application.
+                        </p>
+
+                        <!-- Component Flow (Modular Blocks) -->
+                        <div class="grid grid-cols-3 gap-3">
+
+                            <div class="comp-block delay-comp-1 bg-[#0f172a]
+                                   border border-slate-800
+                                   rounded-lg p-3 text-center cursor-pointer">
+                                <i class="fas fa-bars
+                                      text-[#61DAFB] mb-2 block"></i>
+
+                                <p class="text-sm font-bold text-slate-200">
+                                    Navbar
+                                </p>
+                            </div>
+
+                            <div class="comp-block delay-comp-2 bg-[#0f172a]
+                                   border border-slate-800
+                                   rounded-lg p-3 text-center cursor-pointer">
+                                <i class="fas fa-id-card
+                                      text-[#61DAFB] mb-2 block"></i>
+
+                                <p class="text-sm font-bold text-slate-200">
+                                    Product Card
+                                </p>
+                            </div>
+
+                            <div class="comp-block delay-comp-3 bg-[#0f172a]
+                                   border border-slate-800
+                                   rounded-lg p-3 text-center cursor-pointer">
+                                <i class="fas fa-shoe-prints
+                                      text-[#61DAFB] mb-2 block"></i>
+
+                                <p class="text-sm font-bold text-slate-200">
+                                    Footer
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Message -->
+                    <div class="flex items-center mt-5">
+
+                        <i class="arrow-indicator fas fa-arrow-right
+                               text-[#61DAFB] mr-3"></i>
+
+                        <p class="text-sm text-slate-400">
+                            <span class="text-white font-medium">
+                                JSX + Components
+                            </span>
+                            → Build clean and reusable UI
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

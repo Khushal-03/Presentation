@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React.js Presentation Deck</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b1120;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    #stage {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      transform-origin: center center;
+      background: #0b1120;
+    }
+
+    iframe {
+      width: 1280px;
+      height: 720px;
+      border: none;
+      display: block;
+      background: #0b1120;
+    }
+
+    /* Invisible click/focus keeper over iframe */
+    #focusLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      display: none;
+    }
+
+    /* In fullscreen: activate the focus layer so clicking anywhere keeps keys working */
+    :fullscreen #focusLayer,
+    :-webkit-full-screen #focusLayer {
+      display: block;
+    }
+
+    /* Hide buttons and counter completely in fullscreen */
+    :fullscreen #navControls,
+    :-webkit-full-screen #navControls,
+    :fullscreen #counter,
+    :-webkit-full-screen #counter {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body tabindex="0">
+
+  <div id="stage">
+
+    <!-- Invisible Layer that captures focus even after waiting long periods -->
+    <div id="focusLayer"></div>
+
+    <!-- The Slide Loader Frame -->
+    <iframe id="slideViewer" src="slide-1.html"></iframe>
+
+    <!-- Floating Navigation Bar (Only visible in normal mode) -->
+    <div
+      id="navControls"
+      class="absolute bottom-6 left-0 w-full flex items-center justify-center gap-4 z-50 pointer-events-auto"
+    >
+      <button
+        id="prevBtn"
+        onclick="prevSlide()"
+        class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:border-[#61DAFB]/50 hover:text-[#61DAFB] transition bg-slate-900/80 cursor-pointer shadow-lg"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+        <span class="text-xs font-semibold">Back</span>
+      </button>
+
+      <button
+        id="fsBtn"
+        onclick="enterFullscreen()"
+        class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:border-[#61DAFB]/50 hover:text-[#61DAFB] transition bg-slate-900/80 cursor-pointer shadow-lg"
+      >
+        <i class="fa-solid fa-expand"></i>
+        <span class="text-xs font-semibold">Full Screen</span>
+      </button>
+
+      <button
+        id="nextBtn"
+        onclick="nextSlide()"
+        class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#61DAFB] text-[#0b1120] font-bold hover:bg-[#8be5ff] transition cursor-pointer shadow-lg"
+      >
+        <span class="text-xs font-bold">Next</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div
+      id="counter"
+      class="absolute bottom-8 right-10 text-slate-500 font-bold text-sm tracking-wider z-50 pointer-events-none"
+    >
+      01 / 11
+    </div>
+
+  </div>
+
+  <script>
+    const slides = [
+      "slide-1.html",
+      "slide-2.html",
+      "slide-3.html",
+      "slide-4.html",
+      "slide-5a.html",
+      "slide-5.html",
+      "slide-6.html",
+      "slide-7.html",
+      "slide-8.html",
+      "slide-9.html",
+      "slide-10.html",
+      "slide-11.html",
+      "slide-12.html",
+      "slide-13.html",
+      "last.html"
+
+    ];
+
+    let currentIndex = 0;
+    const stage = document.getElementById("stage");
+    const viewer = document.getElementById("slideViewer");
+    const counter = document.getElementById("counter");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const navControls = document.getElementById("navControls");
+    const focusLayer = document.getElementById("focusLayer");
+
+    function renderSlide() {
+      viewer.src = slides[currentIndex];
+
+      const currentNumber = String(currentIndex + 1).padStart(2, "0");
+      const totalNumber = String(slides.length).padStart(2, "0");
+      counter.textContent = `${currentNumber} / ${totalNumber}`;
+
+      prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
+      nextBtn.style.visibility = currentIndex === slides.length - 1 ? "hidden" : "visible";
+
+      // Re-claim keyboard focus whenever a slide loads
+      window.focus();
+    }
+
+    function nextSlide() {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        renderSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderSlide();
+      }
+    }
+
+    function goToSlide(targetSlideNameOrNumber) {
+      if (typeof targetSlideNameOrNumber === "number") {
+        currentIndex = targetSlideNameOrNumber - 1;
+      } else {
+        const found = slides.indexOf(targetSlideNameOrNumber);
+        if (found !== -1) currentIndex = found;
+      }
+      renderSlide();
+    }
+
+    function enterFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.error(err));
+      }
+    }
+
+    // Toggle fullscreen elements
+    document.addEventListener("fullscreenchange", () => {
+      if (document.fullscreenElement) {
+        navControls.style.display = "none";
+        counter.style.display = "none";
+      } else {
+        navControls.style.display = "flex";
+        counter.style.display = "block";
+      }
+      autoScale();
+      window.focus();
+    });
+
+    // Auto-scale 1280x720 canvas
+    function autoScale() {
+      const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+      stage.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener("resize", autoScale);
+    autoScale();
+
+    // Central Keydown Handler
+    function handleGlobalKeyDown(e) {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === "f") {
+        enterFullscreen();
+      }
+    }
+
+    // 1. Listen on parent window with capture: true (highest priority)
+    window.addEventListener("keydown", handleGlobalKeyDown, true);
+
+    // 2. Listen inside iframe on load and re-attach properly
+    viewer.addEventListener("load", () => {
+      try {
+        const iWin = viewer.contentWindow;
+        iWin.addEventListener("keydown", handleGlobalKeyDown, true);
+        
+        // Clicking inside the slide restores focus to the main window
+        iWin.document.addEventListener("click", () => {
+          window.focus();
+        });
+      } catch (err) {
+        // Cross-origin fallback
+      }
+      window.focus();
+    });
+
+    // 3. Click anywhere on stage or focusLayer restores keyboard focus
+    stage.addEventListener("click", () => window.focus());
+    focusLayer.addEventListener("click", () => {
+      // In fullscreen, clicking advances the slide like PowerPoint
+      nextSlide();
+      window.focus();
+    });
+
+    // Listen for Agenda jumps
+    window.addEventListener("message", (event) => {
+      if (event.data && event.data.action === "goToSlide") {
+        goToSlide(event.data.target);
+      }
+    });
+
+    // Initial setup
+    renderSlide();
+  </script>
+</body>
+</html>

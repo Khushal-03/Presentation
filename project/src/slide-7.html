@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Props & State</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #020617;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 30px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Left Side Entry */
+        .left-entry {
+            animation: fadeInLeft 0.65s ease-out both;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Exchange Icon Drift */
+        .exchange-drift {
+            display: inline-block;
+            animation: exchangeShift 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes exchangeShift {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(3px);
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.6));
+            }
+        }
+
+        /* Right Section Cards Entry */
+        .concept-card {
+            opacity: 0;
+            animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.22s;
+        }
+
+        .delay-card-3 {
+            animation-delay: 0.34s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(97, 218, 251, 0.45);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 18px rgba(97, 218, 251, 0.08);
+        }
+
+        .concept-card:hover .icon-circle {
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.35);
+        }
+
+        .icon-circle {
+            transition: all 0.22s ease;
+        }
+
+        /* Props Downward Arrow Animation */
+        .arrow-down-bob {
+            display: inline-block;
+            animation: bobDown 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bobDown {
+            0% {
+                transform: translateY(-1px);
+            }
+
+            100% {
+                transform: translateY(2px);
+            }
+        }
+
+        /* State Sync Icon Rotation on Hover */
+        .sync-spin-hover {
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .concept-card:hover .sync-spin-hover {
+            transform: rotate(180deg);
+        }
+
+        /* Code Snippet Boxes */
+        .code-box {
+            font-family: monospace;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .code-box:hover {
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 0 16px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Bottom Indicator Animation */
+        .arrow-indicator {
+            animation: arrowSlide 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowSlide {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(4px);
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* Key Difference Card Hover */
+        .diff-card {
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .diff-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 16px rgba(97, 218, 251, 0.08);
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slide-container" id="slide">
+
+        <!-- Top Accent -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-[#61DAFB] z-30 shadow-[0_0_12px_rgba(97,218,251,0.5)]"></div>
+
+        <!-- Main Layout -->
+        <div class="flex h-full w-full">
+
+            <!-- ================= LEFT SECTION ================= -->
+            <div class="w-5/12 h-full bg-[#0b1120]
+                   relative flex flex-col justify-center
+                   px-16 z-20 border-r border-slate-800">
+
+                <!-- Decorative React Logo with Slow Spin -->
+                <div class="absolute -left-24 top-1/2
+                       transform -translate-y-1/2
+                       z-0 pointer-events-none">
+                    <i class="fab fa-react react-bg-symbol text-[420px] text-[#61DAFB]"></i>
+                </div>
+
+                <div class="left-entry relative z-10">
+
+                    <!-- Label -->
+                    <div class="flex items-center mb-6">
+
+                        <div class="w-12 h-12 rounded-lg
+                               bg-[#61DAFB]/10
+                               border border-[#61DAFB]/20
+                               flex items-center justify-center
+                               text-[#61DAFB] mr-4 shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+                            <i class="exchange-drift fas fa-exchange-alt text-2xl"></i>
+                        </div>
+
+                        <p class="text-sm font-bold text-slate-500
+                               uppercase tracking-widest">
+                            Data Management
+                        </p>
+
+                    </div>
+
+                    <!-- Heading -->
+                    <h1 class="text-6xl font-black text-white
+                           mb-8 leading-tight">
+                        Props &
+                        <br>
+                        <span class="text-[#61DAFB] drop-shadow-[0_0_18px_rgba(97,218,251,0.25)]">State</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-xl text-slate-300
+                           leading-relaxed
+                           border-l-4 border-[#61DAFB]
+                           pl-6 mb-8">
+                        Props and state are two important ways
+                        React components work with data and
+                        respond to changes.
+                    </p>
+
+                    <!-- Key Idea -->
+                    <div class="diff-card bg-[#0f172a]
+                           rounded-xl p-6
+                           border border-slate-800">
+
+                        <div class="flex items-start mb-2">
+
+                            <i class="fas fa-lightbulb
+                                   text-[#61DAFB]
+                                   text-xl mt-1 mr-3"></i>
+
+                            <p class="text-lg font-bold text-white">
+                                Key Difference
+                            </p>
+
+                        </div>
+
+                        <p class="text-slate-400
+                               text-sm leading-relaxed">
+                            Props come from a parent component,
+                            while state is managed inside a
+                            component and can change over time.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= RIGHT SECTION ================= -->
+            <div class="w-7/12 h-full bg-[#0f172a]
+                   relative flex flex-col
+                   justify-center px-12 z-10">
+
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 z-0 opacity-20" style="
+                    background-image:
+                    radial-gradient(#475569 1px, transparent 1px);
+                    background-size: 24px 24px;
+                "></div>
+
+                <div class="relative z-10
+                       h-full flex flex-col
+                       justify-center py-10">
+
+                    <!-- Section Heading -->
+                    <h2 class="text-3xl font-bold text-white
+                           mb-6 flex items-center">
+
+                        <span class="bg-[#61DAFB]
+                               w-2 h-8 mr-4 rounded-full shadow-[0_0_12px_rgba(97,218,251,0.6)]"></span>
+
+                        Props vs State
+
+                    </h2>
+
+                    <!-- Two Main Comparison Cards -->
+                    <div class="grid grid-cols-2 gap-5 mb-5">
+
+                        <!-- Props -->
+                        <div class="concept-card delay-card-1
+                               bg-[#0b1120]
+                               border border-slate-800
+                               rounded-xl p-6">
+
+                            <div class="flex items-center mb-4">
+
+                                <div class="icon-circle w-11 h-11 rounded-full
+                                       bg-[#61DAFB]/10
+                                       flex items-center justify-center
+                                       text-[#61DAFB] mr-4">
+                                    <i class="arrow-down-bob fas fa-arrow-down"></i>
+                                </div>
+
+                                <p class="text-2xl font-bold text-white">
+                                    Props
+                                </p>
+
+                            </div>
+
+                            <ul class="space-y-3">
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Data passed from parent to child
+                                    </span>
+                                </li>
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Read-only inside the child
+                                    </span>
+                                </li>
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Used to customize components
+                                    </span>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <!-- State -->
+                        <div class="concept-card delay-card-2
+                               bg-[#0b1120]
+                               border border-slate-800
+                               rounded-xl p-6">
+
+                            <div class="flex items-center mb-4">
+
+                                <div class="icon-circle w-11 h-11 rounded-full
+                                       bg-[#61DAFB]/10
+                                       flex items-center justify-center
+                                       text-[#61DAFB] mr-4">
+                                    <i class="sync-spin-hover fas fa-sync-alt"></i>
+                                </div>
+
+                                <p class="text-2xl font-bold text-white">
+                                    State
+                                </p>
+
+                            </div>
+
+                            <ul class="space-y-3">
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Data managed inside a component
+                                    </span>
+                                </li>
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Can change over time
+                                    </span>
+                                </li>
+
+                                <li class="flex items-start">
+                                    <i class="fas fa-check
+                                           text-[#61DAFB]
+                                           text-xs mt-1.5 mr-3"></i>
+
+                                    <span class="text-sm text-slate-400">
+                                        Changes can update the UI
+                                    </span>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Simple Example -->
+                    <div class="concept-card delay-card-3
+                           bg-[#0b1120]
+                           border border-slate-800
+                           rounded-xl p-5">
+
+                        <div class="flex items-center mb-4">
+
+                            <div class="icon-circle w-10 h-10 rounded-full
+                                   bg-[#61DAFB]/10
+                                   flex items-center justify-center
+                                   text-[#61DAFB] mr-4">
+                                <i class="fas fa-code"></i>
+                            </div>
+
+                            <p class="text-xl font-bold text-white">
+                                Simple Example
+                            </p>
+
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+
+                            <!-- Props Example -->
+                            <div>
+
+                                <p class="text-sm font-bold
+                                       text-[#61DAFB] mb-2">
+                                    Props
+                                </p>
+
+                                <div class="code-box
+                                       bg-[#020617]
+                                       border border-slate-800
+                                       rounded-lg px-4 py-3
+                                       text-sm text-slate-300 shadow-inner">
+                                    <span class="text-purple-400">
+                                        &lt;ProductCard
+                                    </span>
+
+                                    <span class="text-emerald-300">
+                                        name
+                                    </span><span class="text-slate-400">=</span><span
+                                        class="text-amber-200">"Laptop"</span>
+
+                                    <span class="text-purple-400">
+                                        /&gt;
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <!-- State Example -->
+                            <div>
+
+                                <p class="text-sm font-bold
+                                       text-[#61DAFB] mb-2">
+                                    State
+                                </p>
+
+                                <div class="code-box
+                                       bg-[#020617]
+                                       border border-slate-800
+                                       rounded-lg px-4 py-3
+                                       text-sm text-slate-300 shadow-inner">
+                                    <span class="text-purple-400">
+                                        const
+                                    </span>
+
+                                    <span class="text-[#61DAFB]">
+                                        [count, setCount]
+                                    </span>
+
+                                    <span class="text-slate-400">
+                                        =
+                                    </span>
+
+                                    <span class="text-emerald-300">
+                                        useState
+                                    </span><span class="text-slate-400">(</span><span
+                                        class="text-amber-300">0</span><span class="text-slate-400">);</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Message -->
+                    <div class="flex items-center mt-5">
+
+                        <i class="arrow-indicator fas fa-arrow-right
+                               text-[#61DAFB] mr-3"></i>
+
+                        <p class="text-sm text-slate-400">
+                            <span class="text-white font-medium">
+                                Props + State
+                            </span>
+                            → Make React components dynamic
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

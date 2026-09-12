@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>React.js — My Learning Journey | Slide 5</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #0b1120;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 35px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Header Slide In */
+        .header-entry {
+            animation: fadeInDown 0.65s ease-out both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Column Staggered Items */
+        .prereq-item {
+            opacity: 0;
+            animation: itemSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease;
+        }
+
+        @keyframes itemSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .delay-item-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-item-2 {
+            animation-delay: 0.22s;
+        }
+
+        .delay-item-3 {
+            animation-delay: 0.34s;
+        }
+
+        .prereq-item:hover {
+            transform: translateX(4px);
+        }
+
+        .prereq-item:hover .tech-icon {
+            transform: scale(1.1);
+            border-color: rgba(97, 218, 251, 0.4);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.25);
+        }
+
+        .tech-icon {
+            transition: all 0.22s ease;
+        }
+
+        /* Right Column Cards Entrance */
+        .right-card {
+            opacity: 0;
+            animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.15s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.28s;
+        }
+
+        .delay-card-3 {
+            animation-delay: 0.4s;
+        }
+
+        .right-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 18px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Step Arrows Continuous Glow */
+        .flow-arrow {
+            animation: arrowPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowPulse {
+            0% {
+                transform: translateX(0);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateX(3px);
+                opacity: 1;
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* Mini React Icon Spin */
+        .react-mini-spin {
+            display: inline-block;
+            animation: slowSpin 16s linear infinite;
+        }
+
+        /* Key Idea Bulb Glow */
+        .bulb-glow {
+            animation: bulbPulse 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes bulbPulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 2px rgba(97, 218, 251, 0.3));
+            }
+
+            100% {
+                transform: scale(1.12);
+                filter: drop-shadow(0 0 10px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#0b1120] text-[#f8fafc]">
+
+    <main class="slide-container mx-auto" id="slide">
+
+        <!-- Background React Logo -->
+        <div class="absolute right-[-80px] top-[-90px] pointer-events-none">
+            <i class="fa-brands fa-react react-bg-symbol text-[520px] text-[#61DAFB]"></i>
+        </div>
+
+        <!-- Top Accent Line -->
+        <div class="absolute top-0 left-0 w-full h-[3px] bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)] z-30">
+        </div>
+
+        <!-- Page Number -->
+        <div class="absolute top-8 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
+            05
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 px-20 pt-16 pb-24">
+
+            <!-- Header -->
+            <div class="header-entry mb-7">
+
+                <p class="text-[#61DAFB] text-sm font-bold tracking-[0.25em] uppercase mb-3">
+                    Getting Started
+                </p>
+
+                <h1 class="text-5xl font-extrabold tracking-tight">
+                    Prerequisites for React.js
+                </h1>
+
+                <p class="mt-4 text-lg text-[#cbd5e1] max-w-3xl leading-relaxed">
+                    Before learning React, having a good understanding of
+                    web development and JavaScript makes the learning process easier.
+                </p>
+
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-2 gap-7">
+
+                <!-- Left: Foundations Card -->
+                <div class="bg-[#0f172a] border border-slate-800
+                           rounded-2xl p-7 shadow-xl">
+
+                    <div class="flex items-center gap-4 mb-7">
+
+                        <div class="w-12 h-12 rounded-xl
+                                   bg-[#61DAFB]/10
+                                   border border-[#61DAFB]/20
+                                   flex items-center justify-center shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+                            <i class="fa-solid fa-layer-group
+                                      text-[#61DAFB] text-xl"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-bold">
+                                What You Should Know
+                            </h2>
+
+                            <p class="text-sm text-slate-500">
+                                Foundation before React
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- HTML & CSS -->
+                    <div class="prereq-item delay-item-1 flex gap-4 mb-6 cursor-pointer">
+
+                        <div class="tech-icon w-10 h-10 shrink-0 rounded-lg
+                                   bg-[#0b1120]
+                                   border border-slate-700
+                                   flex items-center justify-center">
+                            <i class="fa-brands fa-html5 text-[#61DAFB] text-lg"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-white">
+                                HTML & CSS
+                            </h3>
+
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                                Understand basic HTML structure, elements,
+                                forms, CSS styling, Flexbox and Grid.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- JavaScript -->
+                    <div class="prereq-item delay-item-2 flex gap-4 mb-6 cursor-pointer">
+
+                        <div class="tech-icon w-10 h-10 shrink-0 rounded-lg
+                                   bg-[#0b1120]
+                                   border border-slate-700
+                                   flex items-center justify-center">
+                            <i class="fa-brands fa-js text-[#61DAFB] text-lg"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-white">
+                                JavaScript Fundamentals
+                            </h3>
+
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                                Variables, functions, arrays, objects,
+                                loops, conditions and DOM basics.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- ES6 -->
+                    <div class="prereq-item delay-item-3 flex gap-4 cursor-pointer">
+
+                        <div class="tech-icon w-10 h-10 shrink-0 rounded-lg
+                                   bg-[#0b1120]
+                                   border border-slate-700
+                                   flex items-center justify-center">
+                            <i class="fa-solid fa-code text-[#61DAFB] text-base"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-white">
+                                Modern JavaScript
+                            </h3>
+
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                                Be familiar with arrow functions,
+                                destructuring, spread operator,
+                                modules and promises.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-5">
+
+                    <!-- NPM & Tools -->
+                    <div class="right-card delay-card-1 bg-[#0f172a]
+                               border border-slate-800
+                               rounded-2xl p-6 shadow-xl">
+
+                        <div class="flex items-center gap-4 mb-4">
+
+                            <div class="w-11 h-11 rounded-xl
+                                       bg-[#61DAFB]/10
+                                       border border-[#61DAFB]/20
+                                       flex items-center justify-center shadow-[0_0_10px_rgba(97,218,251,0.12)]">
+                                <i class="fa-brands fa-npm
+                                          text-[#61DAFB] text-xl"></i>
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold">
+                                    npm & Development Tools
+                                </h3>
+
+                                <p class="text-sm text-slate-500">
+                                    Basic project setup knowledge
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Know how to use npm, install packages,
+                            work with VS Code, browser DevTools and
+                            basic Git commands.
+                        </p>
+
+                    </div>
+
+                    <!-- Learning Roadmap Flow -->
+                    <div class="right-card delay-card-2 bg-[#61DAFB]/5
+                               border border-[#61DAFB]/20
+                               rounded-2xl p-6 shadow-xl">
+
+                        <h3 class="text-xl font-bold mb-5">
+                            Learning Foundation
+                        </h3>
+
+                        <div class="flex items-center justify-between gap-3">
+
+                            <div class="flex-1 text-center
+                                       bg-[#0f172a]
+                                       border border-slate-700
+                                       rounded-xl p-4 transition-transform hover:-translate-y-1">
+                                <i class="fa-brands fa-html5
+                                          text-[#61DAFB] text-xl mb-2"></i>
+
+                                <p class="text-sm font-medium">
+                                    HTML / CSS
+                                </p>
+                            </div>
+
+                            <i class="flow-arrow fa-solid fa-arrow-right
+                                      text-[#61DAFB]"></i>
+
+                            <div class="flex-1 text-center
+                                       bg-[#0f172a]
+                                       border border-slate-700
+                                       rounded-xl p-4 transition-transform hover:-translate-y-1">
+                                <i class="fa-brands fa-js
+                                          text-[#61DAFB] text-xl mb-2"></i>
+
+                                <p class="text-sm font-medium">
+                                    JavaScript
+                                </p>
+                            </div>
+
+                            <i class="flow-arrow fa-solid fa-arrow-right
+                                      text-[#61DAFB]"></i>
+
+                            <div
+                                class="flex-1 text-center
+                                       bg-[#0f172a]
+                                       border border-[#61DAFB]/40
+                                       rounded-xl p-4 shadow-[0_0_15px_rgba(97,218,251,0.12)] transition-transform hover:-translate-y-1">
+                                <i class="fa-brands fa-react react-mini-spin
+                                          text-[#61DAFB] text-xl mb-2"></i>
+
+                                <p class="text-sm font-medium text-[#61DAFB]">
+                                    React
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Key Idea -->
+                    <div class="right-card delay-card-3 bg-[#0f172a]
+                               border border-slate-800
+                               rounded-2xl p-5 shadow-xl">
+
+                        <div class="flex items-center gap-3">
+
+                            <i class="bulb-glow fa-solid fa-lightbulb
+                                      text-[#61DAFB] text-base"></i>
+
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                <span class="font-bold text-white">
+                                    Key Idea:
+                                </span>
+                                Strong JavaScript fundamentals make
+                                learning React much easier.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

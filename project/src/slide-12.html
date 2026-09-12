@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React.js — My Learning Journey | Context API</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #0b1120;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 35px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Header Entrance */
+        .header-entry {
+            animation: fadeInDown 0.65s ease-out both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Column Staggered Points */
+        .context-point {
+            opacity: 0;
+            animation: pointSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease;
+        }
+
+        @keyframes pointSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .delay-pt-1 {
+            animation-delay: 0.08s;
+        }
+
+        .delay-pt-2 {
+            animation-delay: 0.18s;
+        }
+
+        .delay-pt-3 {
+            animation-delay: 0.28s;
+        }
+
+        .delay-pt-4 {
+            animation-delay: 0.38s;
+        }
+
+        .context-point:hover {
+            transform: translateX(4px);
+        }
+
+        .context-point:hover .point-num {
+            filter: drop-shadow(0 0 8px rgba(97, 218, 251, 0.8));
+            transform: scale(1.08);
+        }
+
+        .point-num {
+            transition: all 0.22s ease;
+            display: inline-block;
+        }
+
+        /* Right Column Cards Entrance */
+        .right-card {
+            opacity: 0;
+            animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.14s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.28s;
+        }
+
+        .right-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 18px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Code Boxes */
+        .code-box {
+            font-family: monospace;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .code-box:hover {
+            border-color: rgba(97, 218, 251, 0.35);
+            box-shadow: 0 0 16px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Hub/Network Pulse */
+        .hub-pulse {
+            display: inline-block;
+            animation: hubWave 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes hubWave {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 2px rgba(97, 218, 251, 0.3));
+            }
+
+            100% {
+                transform: scale(1.08);
+                filter: drop-shadow(0 0 12px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* Flow Arrow Animation */
+        .flow-arrow-pulse {
+            animation: arrowStream 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowStream {
+            0% {
+                transform: translateX(0);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateX(3px);
+                opacity: 1;
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#0b1120] text-[#f8fafc] flex items-center justify-center">
+
+    <main class="slide-container mx-auto" id="slide">
+
+        <!-- Background React Logo -->
+        <div class="absolute right-[-80px] top-[-90px] pointer-events-none">
+            <i class="fa-brands fa-react react-bg-symbol text-[520px] text-[#61DAFB]"></i>
+        </div>
+
+        <!-- Top Accent Line -->
+        <div class="absolute top-0 left-0 w-full h-[3px] bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)] z-30">
+        </div>
+
+        <!-- Page Number -->
+        <div class="absolute top-8 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
+            12
+        </div>
+
+        <!-- Content Area -->
+        <div class="relative z-10 px-20 pt-16 pb-24">
+
+            <!-- Header -->
+            <div class="header-entry mb-6">
+                <p class="text-[#61DAFB] text-sm font-bold tracking-[0.25em] uppercase mb-3">
+                    State Management
+                </p>
+
+                <h1 class="text-5xl font-extrabold tracking-tight">
+                    Context API
+                </h1>
+
+                <p class="mt-4 text-lg text-[#cbd5e1] max-w-3xl leading-relaxed">
+                    Context provides a way to pass data through the component tree without having to pass props down
+                    manually at every level.
+                </p>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-2 gap-7">
+
+                <!-- Left Section: What I Learned -->
+                <div class="bg-[#0f172a] border border-slate-800 rounded-2xl p-1 shadow-xl">
+
+                    <div class="flex items-center gap-4 mb-6">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+                            <i class="hub-pulse fa-solid fa-diagram-project text-[#61DAFB] text-xl"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-bold">
+                                What I Learned
+                            </h2>
+
+                            <p class="text-sm text-slate-500">
+                                Global state without prop drilling
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Point 1 -->
+                    <div class="context-point delay-pt-1 mb-5 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="point-num text-[#61DAFB] font-bold">01</span>
+                            <h3 class="text-lg font-bold text-white">No Prop Drilling</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed mt-2 pl-9">
+                            Avoids passing props through intermediate components that do not actually need the data.
+                        </p>
+                    </div>
+
+                    <!-- Point 2 -->
+                    <div class="context-point delay-pt-2 mb-5 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="point-num text-[#61DAFB] font-bold">02</span>
+                            <h3 class="text-lg font-bold text-white">Context Provider</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed mt-2 pl-9">
+                            Wraps component trees with a Provider to supply shared data to all child components.
+                        </p>
+                    </div>
+
+                    <!-- Point 3 -->
+                    <div class="context-point delay-pt-3 mb-5 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="point-num text-[#61DAFB] font-bold">03</span>
+                            <h3 class="text-lg font-bold text-white">useContext Hook</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed mt-2 pl-9">
+                            Allows any nested component to directly read and subscribe to the context value.
+                        </p>
+                    </div>
+
+                    <!-- Point 4 -->
+                    <div class="context-point delay-pt-4 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="point-num text-[#61DAFB] font-bold">04</span>
+                            <h3 class="text-lg font-bold text-white">Global State</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed mt-2 pl-9">
+                            Ideal for shared app data like themes, user authentication status, or preferred language.
+                        </p>
+                    </div>
+
+                </div> <!-- End of Left Section -->
+
+                <!-- Right Section: Implementation & Flow -->
+                <div class="space-y-4">
+
+                    <!-- Code Example -->
+                    <div class="right-card delay-card-1 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-xl font-bold text-white">
+                                Provider & Consumer
+                            </h3>
+                            <span class="px-3 py-1 rounded-full bg-[#61DAFB]/10 text-[#61DAFB] text-xs font-bold">
+                                React Context
+                            </span>
+                        </div>
+
+                        <div
+                            class="code-box bg-[#0b1120] rounded-lg border border-slate-800 p-4 font-mono text-sm text-slate-300 shadow-inner">
+                            <span class="text-purple-400">const</span> <span class="text-blue-300">ThemeContext</span> =
+                            <span class="text-blue-300">createContext</span>();<br><br>
+                            <span class="text-slate-500">// 1. Wrap with Provider</span><br>
+                            &lt;<span class="text-[#61DAFB]">ThemeContext.Provider</span> <span
+                                class="text-emerald-300">value</span>=<span class="text-amber-200">"dark"</span>&gt;<br>
+                            &nbsp;&nbsp;&lt;<span class="text-purple-400">App</span> /&gt;<br>
+                            &lt;/<span class="text-[#61DAFB]">ThemeContext.Provider</span>&gt;<br><br>
+                            <span class="text-slate-500">// 2. Consume in any child</span><br>
+                            <span class="text-purple-400">const</span> theme = <span
+                                class="text-blue-300">useContext</span>(<span
+                                class="text-blue-300">ThemeContext</span>);
+                        </div>
+                    </div>
+
+                    <!-- Flow Diagram -->
+                    <div
+                        class="right-card delay-card-2 bg-[#61DAFB]/5 border border-[#61DAFB]/20 rounded-2xl p-4 shadow-xl">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+                            Direct Data Access
+                        </h4>
+
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex-1 text-center py-2 px-2 rounded-lg bg-[#0f172a] border border-slate-700">
+                                <i class="fa-solid fa-server text-[#61DAFB] text-xs mb-1 block"></i>
+                                <p class="text-xs font-semibold text-slate-200">ThemeContext</p>
+                                <p class="text-[10px] text-slate-400">Provider Store</p>
+                            </div>
+
+                            <i class="flow-arrow-pulse fa-solid fa-arrow-right text-[#61DAFB] text-xs"></i>
+
+                            <div
+                                class="flex-1 text-center py-2 px-2 rounded-lg bg-[#0f172a] border border-slate-700 opacity-60">
+                                <i class="fa-solid fa-sitemap text-slate-400 text-xs mb-1 block"></i>
+                                <p class="text-xs font-semibold text-slate-300">Intermediate</p>
+                                <p class="text-[10px] text-slate-500">Skipped (No props)</p>
+                            </div>
+
+                            <i class="flow-arrow-pulse fa-solid fa-arrow-right text-[#61DAFB] text-xs"></i>
+
+                            <div
+                                class="flex-1 text-center py-2 px-2 rounded-lg bg-[#0f172a] border border-[#61DAFB]/40 shadow-[0_0_12px_rgba(97,218,251,0.15)]">
+                                <i class="fa-solid fa-cube text-[#61DAFB] text-xs mb-1 block"></i>
+                                <p class="text-xs font-semibold text-[#61DAFB]">Deep Child</p>
+                                <p class="text-[10px] text-slate-300">useContext()</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- End of Right Section -->
+
+            </div> <!-- End of Main Grid -->
+
+        </div> <!-- End of Content Area -->
+
+    </main>
+
+</body>
+
+</html>

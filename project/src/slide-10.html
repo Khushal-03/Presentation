@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React.js — My Learning Journey | Slide 10</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #0b1120;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 35px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Header Entrance */
+        .header-entry {
+            animation: fadeInDown 0.65s ease-out both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Column Staggered Points */
+        .api-point {
+            opacity: 0;
+            animation: pointSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease;
+        }
+
+        @keyframes pointSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .delay-pt-1 {
+            animation-delay: 0.08s;
+        }
+
+        .delay-pt-2 {
+            animation-delay: 0.18s;
+        }
+
+        .delay-pt-3 {
+            animation-delay: 0.28s;
+        }
+
+        .delay-pt-4 {
+            animation-delay: 0.38s;
+        }
+
+        .api-point:hover {
+            transform: translateX(4px);
+        }
+
+        .api-point:hover .point-num {
+            filter: drop-shadow(0 0 8px rgba(97, 218, 251, 0.8));
+            transform: scale(1.08);
+        }
+
+        .point-num {
+            transition: all 0.22s ease;
+            display: inline-block;
+        }
+
+        /* Right Column Cards Entrance */
+        .right-card {
+            opacity: 0;
+            animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.12s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.24s;
+        }
+
+        .delay-card-3 {
+            animation-delay: 0.36s;
+        }
+
+        .right-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 18px rgba(97, 218, 251, 0.08);
+        }
+
+        /* Continuous Arrow Flow Pulse */
+        .flow-arrow-pulse {
+            animation: arrowStream 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowStream {
+            0% {
+                transform: translateX(0);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateX(3px);
+                opacity: 1;
+                filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.8));
+            }
+        }
+
+        /* CRUD Pill Hover */
+        .crud-pill {
+            transition: all 0.2s ease;
+        }
+
+        .crud-pill:hover {
+            transform: translateY(-2px);
+            border-color: rgba(97, 218, 251, 0.5);
+            background-color: rgba(30, 41, 59, 0.9);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.15);
+        }
+
+        /* Cloud Icon Bob */
+        .cloud-bob {
+            display: inline-block;
+            animation: cloudFloat 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes cloudFloat {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(2px);
+            }
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#0b1120] text-[#f8fafc] flex items-center justify-center">
+
+    <main class="slide-container mx-auto" id="slide">
+
+        <!-- Background React Logo -->
+        <div class="absolute right-[-80px] top-[-90px] pointer-events-none">
+            <i class="fa-brands fa-react react-bg-symbol text-[500px] text-[#61DAFB]"></i>
+        </div>
+
+        <!-- Top Accent Line -->
+        <div class="absolute top-0 left-0 w-full h-[3px] bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)] z-30">
+        </div>
+
+        <!-- Page Number -->
+        <div class="absolute top-8 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
+            10
+        </div>
+
+        <!-- Main Slide Content -->
+        <div class="relative z-10 px-16 pt-9 pb-8">
+
+            <!-- Header -->
+            <div class="header-entry mb-5">
+                <p class="text-[#61DAFB] text-xs font-bold tracking-[0.25em] uppercase mb-1.5">
+                    Backend Communication
+                </p>
+
+                <h1 class="text-4xl font-extrabold tracking-tight">
+                    API Integration
+                </h1>
+
+                <p class="mt-2 text-base text-[#cbd5e1] max-w-3xl leading-relaxed">
+                    React applications communicate with backend APIs to fetch, create, update, and delete application
+                    data.
+                </p>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-2 gap-6 items-start">
+
+                <!-- Left Section: What I Learned -->
+                <div class="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center shadow-[0_0_10px_rgba(97,218,251,0.15)]">
+                            <i class="cloud-bob fa-solid fa-cloud-arrow-down text-[#61DAFB] text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">What I Learned</h2>
+                            <p class="text-xs text-slate-500">Working with APIs in React</p>
+                        </div>
+                    </div>
+
+                    <!-- Point 1 -->
+                    <div class="api-point delay-pt-1 mb-3.5 cursor-pointer">
+                        <div class="flex items-center gap-2.5">
+                            <span class="point-num text-[#61DAFB] text-sm font-bold">01</span>
+                            <h3 class="text-base font-bold text-white">Fetch API Data</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed mt-1 pl-6">
+                            React requests data from endpoints and stores the result to populate components.
+                        </p>
+                    </div>
+
+                    <!-- Point 2 -->
+                    <div class="api-point delay-pt-2 mb-3.5 cursor-pointer">
+                        <div class="flex items-center gap-2.5">
+                            <span class="point-num text-[#61DAFB] text-sm font-bold">02</span>
+                            <h3 class="text-base font-bold text-white">Manage Loading State</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed mt-1 pl-6">
+                            Loading indicators give users visual feedback while an asynchronous request is in progress.
+                        </p>
+                    </div>
+
+                    <!-- Point 3 -->
+                    <div class="api-point delay-pt-3 mb-3.5 cursor-pointer">
+                        <div class="flex items-center gap-2.5">
+                            <span class="point-num text-[#61DAFB] text-sm font-bold">03</span>
+                            <h3 class="text-base font-bold text-white">Handle Errors</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed mt-1 pl-6">
+                            Failed requests are caught gracefully via try/catch blocks without breaking the application.
+                        </p>
+                    </div>
+
+                    <!-- Point 4 -->
+                    <div class="api-point delay-pt-4 cursor-pointer">
+                        <div class="flex items-center gap-2.5">
+                            <span class="point-num text-[#61DAFB] text-sm font-bold">04</span>
+                            <h3 class="text-base font-bold text-white">Display Dynamic Data</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed mt-1 pl-6">
+                            Parsed JSON responses update the state to immediately re-render clean UI elements.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Right Section: Code Example & Flows -->
+                <div class="space-y-4">
+
+                    <!-- Code Box -->
+                    <div class="right-card delay-card-1 bg-[#0f172a] border border-slate-800 rounded-2xl p-4 shadow-xl">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500/70"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-500/70"></span>
+                                </div>
+                                <h3 class="text-sm font-bold text-slate-300 ml-2">apiService.js</h3>
+                            </div>
+                            <span
+                                class="px-2.5 py-0.5 rounded-full bg-[#61DAFB]/10 text-[#61DAFB] text-[11px] font-bold">
+                                Async / Await
+                            </span>
+                        </div>
+
+                        <div
+                            class="bg-[#0b1120] rounded-xl border border-slate-800/80 p-3 font-mono text-[12.5px] leading-snug text-slate-300 overflow-x-auto shadow-inner">
+                            <span class="text-purple-400">const</span> <span class="text-blue-300">fetchProducts</span>
+                            = <span class="text-purple-400">async</span> () =&gt; {<br>
+                            &nbsp;&nbsp;<span class="text-purple-400">try</span> {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">const</span> res = <span
+                                class="text-purple-400">await</span> <span class="text-blue-300">fetch</span>(<span
+                                class="text-emerald-300">"/api/products"</span>);<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">const</span> data = <span
+                                class="text-purple-400">await</span> res.<span class="text-blue-300">json</span>();<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-300">setProducts</span>(data);<br>
+                            &nbsp;&nbsp;} <span class="text-purple-400">catch</span> (err) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="text-blue-300">error</span>(<span
+                                class="text-emerald-300">"API Error:"</span>, err);<br>
+                            &nbsp;&nbsp;}<br>
+                            };
+                        </div>
+                    </div>
+
+                    <!-- Flow Diagram -->
+                    <div
+                        class="right-card delay-card-2 bg-[#0f172a] border border-slate-800 rounded-2xl p-3.5 shadow-xl">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+                            Integration Flow
+                        </h3>
+
+                        <div class="flex items-center justify-between gap-2">
+                            <div
+                                class="flex-1 text-center py-2 px-1 rounded-lg bg-[#0b1120] border border-slate-700/80 transition-transform hover:-translate-y-1">
+                                <i class="fa-solid fa-user text-[#61DAFB] text-xs mb-1 block"></i>
+                                <p class="text-[11px] font-medium text-slate-200">User Action</p>
+                            </div>
+
+                            <i class="flow-arrow-pulse fa-solid fa-arrow-right text-[#61DAFB] text-xs"></i>
+
+                            <div
+                                class="flex-1 text-center py-2 px-1 rounded-lg bg-[#0b1120] border border-slate-700/80 transition-transform hover:-translate-y-1">
+                                <i class="fa-solid fa-server text-[#61DAFB] text-xs mb-1 block"></i>
+                                <p class="text-[11px] font-medium text-slate-200">REST API</p>
+                            </div>
+
+                            <i class="flow-arrow-pulse fa-solid fa-arrow-right text-[#61DAFB] text-xs"></i>
+
+                            <div
+                                class="flex-1 text-center py-2 px-1 rounded-lg bg-[#0b1120] border border-slate-700/80 transition-transform hover:-translate-y-1">
+                                <i class="fa-solid fa-database text-[#61DAFB] text-xs mb-1 block"></i>
+                                <p class="text-[11px] font-medium text-slate-200">Database</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRUD Operations -->
+                    <div
+                        class="right-card delay-card-3 bg-[#61DAFB]/5 border border-[#61DAFB]/20 rounded-xl py-2 px-4 shadow-xl">
+                        <div class="flex items-center justify-around text-xs font-medium">
+                            <span
+                                class="crud-pill px-3 py-1 rounded-md bg-[#0f172a] border border-slate-700 text-slate-200 cursor-pointer">Create
+                                (POST)</span>
+                            <span class="text-[#61DAFB]">•</span>
+                            <span
+                                class="crud-pill px-3 py-1 rounded-md bg-[#0f172a] border border-slate-700 text-slate-200 cursor-pointer">Read
+                                (GET)</span>
+                            <span class="text-[#61DAFB]">•</span>
+                            <span
+                                class="crud-pill px-3 py-1 rounded-md bg-[#0f172a] border border-slate-700 text-slate-200 cursor-pointer">Update
+                                (PUT)</span>
+                            <span class="text-[#61DAFB]">•</span>
+                            <span
+                                class="crud-pill px-3 py-1 rounded-md bg-[#0f172a] border border-slate-700 text-slate-200 cursor-pointer">Delete
+                                (DELETE)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

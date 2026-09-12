@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React.js — My Learning Journey | Thank You</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #0b1120;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    rgba(97, 218, 251, 0.08),
+                    transparent 45%
+                ),
+                #0b1120;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 25s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes ambientPulse {
+            0% { opacity: 0.03; filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0)); }
+            100% { opacity: 0.07; filter: drop-shadow(0 0 40px rgba(97, 218, 251, 0.35)); }
+        }
+
+        /* Central Reveal Animation */
+        .hero-reveal {
+            animation: zoomFade 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes zoomFade {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Staggered Cards Entrance */
+        .card-reveal {
+            animation: cardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes cardUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-card-1 { animation-delay: 0.15s; }
+        .delay-card-2 { animation-delay: 0.28s; }
+        .delay-card-3 { animation-delay: 0.40s; }
+
+        /* Interactive Card Hover */
+        .interactive-card {
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(97, 218, 251, 0.45);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 18px rgba(97, 218, 251, 0.1);
+        }
+
+        .interactive-card:hover .icon-box {
+            transform: scale(1.08);
+            background-color: rgba(97, 218, 251, 0.18);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.3);
+        }
+
+        .icon-box {
+            transition: all 0.25s ease;
+        }
+
+        /* Bottom Ambient Glow */
+        .bottom-glow {
+            position: absolute;
+            width: 550px;
+            height: 160px;
+            bottom: -110px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(97, 218, 251, 0.12);
+            filter: blur(85px);
+            border-radius: 50%;
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+/* 1. Force GPU compositor to never freeze animations in fullscreen */
+.flow-card,
+.concept-card,
+.summary-card,
+.interactive-card,
+.step-badge,
+.point-num,
+.bulb-glow,
+.final-step-glow,
+.step-4-glow {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform, box-shadow, border-color, opacity;
+}
+
+/* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+.point-num,
+.hook-number {
+    display: inline-block;
+    animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+}
+
+@keyframes numberGlowPulse {
+    0% {
+        text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+        color: #61DAFB;
+    }
+    100% {
+        text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+        color: #ffffff;
+    }
+}
+
+/* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+.final-step-glow,
+.step-4-glow {
+    animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+}
+
+@keyframes cardBlinkPulse {
+    0% {
+        border-color: rgba(97, 218, 251, 0.2);
+        box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+    }
+    50% {
+        border-color: rgba(97, 218, 251, 0.7);
+        box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+    }
+    100% {
+        border-color: rgba(97, 218, 251, 0.35);
+        box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <main class="slide-container" id="slide">
+
+        <!-- Top Accent Line -->
+        <div class="absolute top-0 left-0 w-full h-[3px] bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)] z-30"></div>
+
+        <!-- Background Rotating Atom -->
+        <div class="absolute -right-24 -bottom-24 pointer-events-none">
+            <i class="fa-brands fa-react react-bg-symbol text-[540px] text-[#61DAFB]"></i>
+        </div>
+
+        <!-- Center Content Block -->
+        <div class="relative z-10 flex flex-col items-center text-center px-14 w-full">
+
+            <!-- Hero Header -->
+            <div class="hero-reveal mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-[#61DAFB]/10 border border-[#61DAFB]/25 flex items-center justify-center mx-auto mb-3 shadow-[0_0_18px_rgba(97,218,251,0.2)]">
+                    <i class="fa-brands fa-react text-3xl text-[#61DAFB] animate-spin" style="animation-duration: 18s;"></i>
+                </div>
+
+                <p class="text-[#61DAFB] text-xs font-bold tracking-[0.3em] uppercase mb-1.5">
+                    Conclusion
+                </p>
+
+                <h1 class="text-5xl font-black text-white tracking-tight">
+                    Thank <span class="text-[#61DAFB] drop-shadow-[0_0_20px_rgba(97,218,251,0.35)]">You!</span>
+                </h1>
+
+                <!-- Mentoring line for the entire internship -->
+                <p class="mt-2.5 text-sm text-slate-300 max-w-2xl leading-relaxed mx-auto">
+                    Special gratitude to my mentors for their continuous guidance, technical reviews, and mentorship throughout my entire internship journey.
+                </p>
+            </div>
+
+            <!-- Presenter Badge -->
+            <div class="card-reveal delay-card-1 mb-6 flex items-center gap-3 bg-[#0f172a] border border-slate-800 rounded-full px-5 py-2 shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-[#61DAFB] animate-pulse"></span>
+                <span class="text-xs text-slate-400">Presented by:</span>
+                <span class="text-xs font-bold text-white tracking-wide">Khushal Wadile</span>
+                <span class="text-slate-600 text-xs">|</span>
+                <span class="text-xs text-slate-400">Web Development Intern</span>
+            </div>
+
+            <!-- 2 Mentors Section -->
+            <div class="w-full max-w-2xl mb-7">
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3.5">
+                    Mentorship &amp; Guidance
+                </p>
+
+                <div class="grid grid-cols-2 gap-5">
+
+                    <!-- Mentor 1: React / Frontend -->
+                    <div class="interactive-card card-reveal delay-card-2 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-lg text-left flex items-center gap-4">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-brands fa-react text-[#61DAFB] text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white leading-tight">
+                               Akshay Bhujbal
+                            </h3>
+                            <p class="text-xs text-[#61DAFB] font-medium mt-1">
+                                React.js &amp; Frontend Mentor
+                            </p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">
+                                Component UI &amp; State Architecture
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mentor 2: Node.js / Backend -->
+                    <div class="interactive-card card-reveal delay-card-3 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-lg text-left flex items-center gap-4">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-brands fa-node-js text-emerald-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white leading-tight">
+                              Harshita Bhangale
+
+                            </h3>
+                            <p class="text-xs text-emerald-400 font-medium mt-1">
+                                Node.js &amp; Backend Mentor
+                            </p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">
+                                REST APIs &amp; Server Integration
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Q&A Footer Badge -->
+            <div class="card-reveal delay-card-3 flex items-center gap-2 px-5 py-2 rounded-full bg-[#0f172a] border border-slate-800 text-xs text-slate-300 shadow-md">
+                <i class="fa-solid fa-comments text-[#61DAFB] text-sm mr-1"></i>
+                <span>Open for Questions, Discussion &amp; Feedback</span>
+            </div>
+
+        </div>
+
+        <!-- Ambient Bottom Light Glow -->
+        <div class="bottom-glow"></div>
+
+    </main>
+
+</body>
+</html>

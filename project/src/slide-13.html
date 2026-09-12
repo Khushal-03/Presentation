@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React.js — My Learning Journey | Summary</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #0b1120;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #0b1120;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Ambient React Background Spin */
+        .react-bg-symbol {
+            display: inline-block;
+            animation: slowSpin 28s linear infinite, ambientPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                opacity: 0.025;
+                filter: drop-shadow(0 0 0 rgba(97, 218, 251, 0));
+            }
+
+            100% {
+                opacity: 0.055;
+                filter: drop-shadow(0 0 35px rgba(97, 218, 251, 0.25));
+            }
+        }
+
+        /* Header Entrance */
+        .header-entry {
+            animation: fadeInDown 0.65s ease-out both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Staggered Cards Entrance */
+        .summary-card {
+            opacity: 0;
+            animation: cardPopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        @keyframes cardPopIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .delay-card-1 {
+            animation-delay: 0.08s;
+        }
+
+        .delay-card-2 {
+            animation-delay: 0.16s;
+        }
+
+        .delay-card-3 {
+            animation-delay: 0.24s;
+        }
+
+        .delay-card-4 {
+            animation-delay: 0.32s;
+        }
+
+        .delay-card-5 {
+            animation-delay: 0.40s;
+        }
+
+        .delay-card-6 {
+            animation-delay: 0.48s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(97, 218, 251, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(97, 218, 251, 0.1);
+        }
+
+        .summary-card:hover .icon-wrapper {
+            transform: scale(1.08);
+            box-shadow: 0 0 12px rgba(97, 218, 251, 0.3);
+        }
+
+        .icon-wrapper {
+            transition: all 0.22s ease;
+        }
+
+        /* Checkmark pop */
+        .check-glow {
+            animation: checkPulse 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes checkPulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 2px rgba(97, 218, 251, 0.4));
+            }
+
+            100% {
+                transform: scale(1.06);
+                filter: drop-shadow(0 0 10px rgba(97, 218, 251, 0.9));
+            }
+        }
+
+        /* ================= FULLSCREEN GPU FIX ================= */
+
+        /* 1. Force GPU compositor to never freeze animations in fullscreen */
+        .flow-card,
+        .concept-card,
+        .summary-card,
+        .interactive-card,
+        .step-badge,
+        .point-num,
+        .bulb-glow,
+        .final-step-glow,
+        .step-4-glow {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: transform, box-shadow, border-color, opacity;
+        }
+
+        /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+        .point-num,
+        .hook-number {
+            display: inline-block;
+            animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes numberGlowPulse {
+            0% {
+                text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+                color: #61DAFB;
+            }
+
+            100% {
+                text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+                color: #ffffff;
+            }
+        }
+
+        /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+        .final-step-glow,
+        .step-4-glow {
+            animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes cardBlinkPulse {
+            0% {
+                border-color: rgba(97, 218, 251, 0.2);
+                box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+            }
+
+            50% {
+                border-color: rgba(97, 218, 251, 0.7);
+                box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+            }
+
+            100% {
+                border-color: rgba(97, 218, 251, 0.35);
+                box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#0b1120] text-[#f8fafc] flex items-center justify-center">
+
+    <main class="slide-container mx-auto" id="slide">
+
+        <!-- Background React Logo -->
+        <div class="absolute right-[-80px] top-[-90px] pointer-events-none">
+            <i class="fa-brands fa-react react-bg-symbol text-[520px] text-[#61DAFB]"></i>
+        </div>
+
+        <!-- Top Accent Line -->
+        <div class="absolute top-0 left-0 w-full h-[3px] bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)] z-30">
+        </div>
+
+        <!-- Page Number -->
+        <div class="absolute top-8 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
+            13
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 px-16 pt-9 pb-8">
+
+            <!-- Header -->
+            <div class="header-entry mb-6">
+                <p class="text-[#61DAFB] text-xs font-bold tracking-[0.25em] uppercase mb-1.5">
+                    Wrap Up
+                </p>
+
+                <h1 class="text-4xl font-extrabold tracking-tight">
+                    Journey Summary
+                </h1>
+
+                <p class="mt-2 text-base text-[#cbd5e1] max-w-3xl leading-relaxed">
+                    A quick overview of key milestones and skills acquired during my React.js learning journey.
+                </p>
+            </div>
+
+            <!-- Summary Grid -->
+            <div class="grid grid-cols-3 gap-5">
+
+                <!-- Card 1: Core Fundamentals -->
+                <div class="summary-card delay-card-1 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-code text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">JSX &amp; Components</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Transitioned from plain HTML to declarative JSX, breaking complex user interfaces into isolated,
+                        reusable blocks.
+                    </p>
+                </div>
+
+                <!-- Card 2: Props & State -->
+                <div class="summary-card delay-card-2 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Props &amp; State</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Mastered unidirectional data flow with immutable props and reactive state updates that
+                        automatically trigger UI re-renders.
+                    </p>
+                </div>
+
+                <!-- Card 3: Events & Forms -->
+                <div class="summary-card delay-card-3 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-keyboard text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Events &amp; Forms</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Implemented synthetic event handling and controlled components to manage user inputs and form
+                        submissions smoothly.
+                    </p>
+                </div>
+
+                <!-- Card 4: React Hooks -->
+                <div class="summary-card delay-card-4 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-bolt text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Modern Hooks</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Utilized <span class="text-[#61DAFB]">useState</span> for local state and <span
+                            class="text-[#61DAFB]">useEffect</span> to handle side-effects and component lifecycles
+                        cleanly.
+                    </p>
+                </div>
+
+                <!-- Card 5: API Integration -->
+                <div class="summary-card delay-card-5 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-cloud-arrow-down text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Backend APIs</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Integrated REST APIs via async/await, successfully handling loading spinners, error states, and
+                        full CRUD pipelines.
+                    </p>
+                </div>
+
+                <!-- Card 6: Architecture & Scale -->
+                <div class="summary-card delay-card-6 bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div
+                        class="icon-wrapper w-10 h-10 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-3.5">
+                        <i class="fa-solid fa-sitemap text-[#61DAFB] text-base"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Routing &amp; Context</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Structured multi-page apps with React Router and bypassed prop drilling using Context API for
+                        shared application state.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Bottom Key Takeaway Bar -->
+            <div
+                class="mt-5 bg-[#61DAFB]/5 border border-[#61DAFB]/20 rounded-xl px-5 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="check-glow fa-solid fa-circle-check text-[#61DAFB] text-base"></i>
+                    <p class="text-xs text-slate-300">
+                        <span class="text-white font-semibold">Core Takeaway:</span> React enables building modern,
+                        reactive, and modular web applications with scalable state architecture.
+                    </p>
+                </div>
+                <span class="text-[#61DAFB] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    Ready For Projects <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </span>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
