@@ -44,7 +44,7 @@
       box-shadow: 0 0 45px rgba(97, 218, 251, 0.12);
     }
 
-    /* Ambient Rings */
+    /* Ambient Corner Rings Float */
     .ambient-ring-1 {
       animation: ringDrift 14s ease-in-out infinite alternate;
     }
@@ -54,8 +54,15 @@
     }
 
     @keyframes ringDrift {
-      0% { transform: scale(1) rotate(0deg); opacity: 0.08; }
-      100% { transform: scale(1.08) rotate(12deg); opacity: 0.15; }
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.08;
+      }
+
+      100% {
+        transform: scale(1.08) rotate(12deg);
+        opacity: 0.15;
+      }
     }
 
     /* Header Entrance */
@@ -64,201 +71,302 @@
     }
 
     @keyframes slideDownFade {
-      from { opacity: 0; transform: translateY(-16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* Icon Pulse */
+    /* Icon subtle glow */
     .icon-glow {
       animation: iconPulse 3s ease-in-out infinite alternate;
     }
 
     @keyframes iconPulse {
-      0% { box-shadow: 0 0 0 rgba(97, 218, 251, 0); }
-      100% { box-shadow: 0 0 16px rgba(97, 218, 251, 0.25); }
+      0% {
+        box-shadow: 0 0 0 rgba(97, 218, 251, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 16px rgba(97, 218, 251, 0.25);
+      }
     }
 
-    /* Agenda Item Cascade */
+    /* Staggered Agenda Item Entrance */
     .agenda-item {
       opacity: 0;
-      animation: itemFadeIn 0.35s ease-out forwards;
-      transition: all 0.18s ease;
-      transform: translateZ(0);
-      backface-visibility: hidden;
+      animation: itemFadeIn 0.45s ease-out forwards;
+      transition: all 0.22s ease;
     }
 
     @keyframes itemFadeIn {
-      from { opacity: 0; transform: translateX(-8px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    .delay-1 { animation-delay: 0.04s; }
-    .delay-2 { animation-delay: 0.08s; }
-    .delay-3 { animation-delay: 0.12s; }
-    .delay-4 { animation-delay: 0.16s; }
-    .delay-5 { animation-delay: 0.20s; }
-    .delay-6 { animation-delay: 0.24s; }
-    .delay-7 { animation-delay: 0.28s; }
-    .delay-8 { animation-delay: 0.32s; }
-    .delay-9 { animation-delay: 0.36s; }
-    .delay-10 { animation-delay: 0.40s; }
-    .delay-11 { animation-delay: 0.44s; }
-    .delay-12 { animation-delay: 0.48s; }
-    .delay-13 { animation-delay: 0.52s; }
-    .delay-14 { animation-delay: 0.56s; }
+    /* Cascade animation delays */
+    .delay-1 {
+      animation-delay: 0.08s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.14s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.20s;
+    }
+
+    .delay-4 {
+      animation-delay: 0.26s;
+    }
+
+    .delay-5 {
+      animation-delay: 0.32s;
+    }
+
+    .delay-6 {
+      animation-delay: 0.38s;
+    }
+
+    .delay-7 {
+      animation-delay: 0.44s;
+    }
+
+    .delay-8 {
+      animation-delay: 0.50s;
+    }
+
+    .delay-9 {
+      animation-delay: 0.56s;
+    }
+
+    .delay-10 {
+      animation-delay: 0.62s;
+    }
 
     /* Interactive Hover */
     .agenda-item:hover {
       border-color: rgba(97, 218, 251, 0.35);
       background: rgba(30, 41, 59, 0.75);
-      transform: translateX(4px);
+      transform: translateX(6px);
     }
 
     .agenda-item:hover .agenda-number {
-      filter: drop-shadow(0 0 8px rgba(97, 218, 251, 0.65));
-      transform: scale(1.05);
+      filter: drop-shadow(0 0 10px rgba(97, 218, 251, 0.65));
+      transform: scale(1.04);
     }
 
     .agenda-number {
       transition: all 0.2s ease;
       display: inline-block;
     }
+
+    /* Hide fullscreen toggle button if present */
+    :fullscreen #fullscreenBtn,
+    :-webkit-full-screen #fullscreenBtn {
+      display: none !important;
+    }
+
+    /* ================= FULLSCREEN GPU FIX ================= */
+
+    /* 1. Force GPU compositor to never freeze animations in fullscreen */
+    .flow-card,
+    .concept-card,
+    .summary-card,
+    .interactive-card,
+    .step-badge,
+    .point-num,
+    .bulb-glow,
+    .final-step-glow,
+    .step-4-glow {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform, box-shadow, border-color, opacity;
+    }
+
+    /* 2. Reliable Number Glow (Uses text-shadow instead of bug-prone drop-shadow) */
+    .point-num,
+    .hook-number {
+      display: inline-block;
+      animation: numberGlowPulse 2.8s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes numberGlowPulse {
+      0% {
+        text-shadow: 0 0 2px rgba(97, 218, 251, 0.2);
+        color: #61DAFB;
+      }
+
+      100% {
+        text-shadow: 0 0 12px rgba(97, 218, 251, 0.9), 0 0 20px rgba(97, 218, 251, 0.4);
+        color: #ffffff;
+      }
+    }
+
+    /* 3. Card Outline Blink / Pulse (Works automatically in fullscreen) */
+    .final-step-glow,
+    .step-4-glow {
+      animation: cardBlinkPulse 3s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes cardBlinkPulse {
+      0% {
+        border-color: rgba(97, 218, 251, 0.2);
+        box-shadow: 0 0 6px rgba(97, 218, 251, 0.08);
+      }
+
+      50% {
+        border-color: rgba(97, 218, 251, 0.7);
+        box-shadow: 0 0 18px rgba(97, 218, 251, 0.3), inset 0 0 8px rgba(97, 218, 251, 0.08);
+      }
+
+      100% {
+        border-color: rgba(97, 218, 251, 0.35);
+        box-shadow: 0 0 8px rgba(97, 218, 251, 0.12);
+      }
+    }
   </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center text-slate-100 bg-[#0b1120]">
 
-  <!-- Slide Canvas -->
+  <!-- Slide Wrapper -->
   <main id="slide" class="slide-wrapper relative w-[1280px] h-[720px] overflow-hidden bg-[#0b1120]">
 
-    <!-- Page Number -->
-    <div class="absolute top-7 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
-      02
-    </div>
-
+         <!-- Page Number -->
+        <div class="absolute top-8 right-10 text-sm text-slate-500 tracking-widest font-semibold z-20">
+            02
+        </div>
     <!-- Top Accent -->
     <div class="absolute top-0 left-0 w-full h-1 bg-[#61DAFB] shadow-[0_0_12px_rgba(97,218,251,0.5)]"></div>
 
-    <!-- Decorative Circles -->
-    <div class="ambient-ring-1 absolute -top-32 -right-32 w-80 h-80 rounded-full border border-[#61DAFB]/15 pointer-events-none"></div>
-    <div class="ambient-ring-2 absolute -bottom-40 -left-40 w-96 h-96 rounded-full border border-[#61DAFB]/15 pointer-events-none"></div>
+    <!-- Decorative Animated Circles -->
+    <div
+      class="ambient-ring-1 absolute -top-32 -right-32 w-80 h-80 rounded-full border border-[#61DAFB]/15 pointer-events-none">
+    </div>
 
-    <!-- Header Section -->
-    <section class="header-reveal pt-8 px-16">
-      <div class="flex items-center gap-3">
-        <div class="icon-glow w-9 h-9 rounded-xl flex items-center justify-center bg-[#61DAFB]/10 border border-[#61DAFB]/20">
-          <i class="fa-solid fa-list text-[#61DAFB] text-sm"></i>
+    <div
+      class="ambient-ring-2 absolute -bottom-40 -left-40 w-96 h-96 rounded-full border border-[#61DAFB]/15 pointer-events-none">
+    </div>
+
+    <!-- Header -->
+    <section class="header-reveal pt-12 px-20">
+      <div class="flex items-center gap-4">
+        <div class="icon-glow w-11 h-11 rounded-xl flex items-center justify-center
+                 bg-[#61DAFB]/10 border border-[#61DAFB]/20">
+          <i class="fa-solid fa-list text-[#61DAFB] text-lg"></i>
         </div>
 
         <div>
-          <p class="text-[#61DAFB] text-[11px] font-semibold uppercase tracking-[0.22em]">
-            React.js Learning Journey
+          <p class="text-[#61DAFB] text-sm font-semibold uppercase tracking-[0.22em]">
+            React.js
           </p>
-          <h1 class="text-3xl font-bold tracking-tight">
-            Presentation Agenda
+
+          <h1 class="text-4xl font-bold tracking-tight">
+            Agenda
           </h1>
         </div>
       </div>
 
-      <p class="mt-1.5 text-sm text-slate-400">
-        A structured breakdown of core concepts and milestones covered
+      <p class="mt-4 text-lg text-slate-400">
+        Topics I explored while learning React.js
       </p>
     </section>
 
-    <!-- Agenda Grid: 7 items left, 7 items right -->
-    <section class="px-16 mt-4">
-      <div class="grid grid-cols-2 gap-6">
+    <!-- Agenda Content -->
+    <section class="px-20 mt-8">
+      <div class="grid grid-cols-2 gap-8">
 
-        <!-- Left Column (01 - 07) -->
-        <div class="agenda-card rounded-xl p-3.5 glow flex flex-col gap-0.5">
+        <!-- Left Column -->
+        <div class="agenda-card rounded-2xl p-5 glow">
 
           <!-- 01 -->
-          <a href="slide-3.html" class="agenda-item delay-1 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">01</span>
-            <span class="text-base font-medium">Introduction to React.js</span>
+          <a href="slide-3.html"
+            class="agenda-item delay-1 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">01</span>
+            <span class="text-[30px] font-medium">Introduction to React.js</span>
           </a>
 
           <!-- 02 -->
-          <a href="slide-4.html" class="agenda-item delay-2 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">02</span>
-            <span class="text-base font-medium">Why React.js?</span>
+          <a href="slide-4.html"
+            class="agenda-item delay-2 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">02</span>
+            <span class="text-[30px] font-medium">Why React.js?</span>
           </a>
 
           <!-- 03 -->
-          <a href="slide-5a.html" class="agenda-item delay-3 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">03</span>
-            <span class="text-base font-medium">Prerequisites for React.js</span>
+          <a href="slide-5.html"
+            class="agenda-item delay-3 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">03</span>
+            <span class="text-[30px] font-medium">How React Works</span>
           </a>
 
           <!-- 04 -->
-          <a href="slide-5.html" class="agenda-item delay-4 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">04</span>
-            <span class="text-base font-medium">How React Works?</span>
+          <a href="slide-6.html"
+            class="agenda-item delay-4 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">04</span>
+            <span class="text-[30px] font-medium">JSX &amp; Components</span>
           </a>
 
           <!-- 05 -->
-          <a href="slide-6.html" class="agenda-item delay-5 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">05</span>
-            <span class="text-base font-medium">JSX &amp; Components</span>
-          </a>
-
-          <!-- 06 -->
-          <a href="slide-7.html" class="agenda-item delay-6 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">06</span>
-            <span class="text-base font-medium">Props &amp; State</span>
-          </a>
-
-          <!-- 07 -->
-          <a href="slide-8.html" class="agenda-item delay-7 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">07</span>
-            <span class="text-base font-medium">Events &amp; Forms</span>
+          <a href="slide-7.html"
+            class="agenda-item delay-5 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">05</span>
+            <span class="text-[30px] font-medium">Props &amp; State</span>
           </a>
 
         </div>
 
-        <!-- Right Column (08 - 14) -->
-        <div class="agenda-card rounded-xl p-3.5 glow flex flex-col gap-0.5">
+        <!-- Right Column -->
+        <div class="agenda-card rounded-2xl p-5 glow">
+
+          <!-- 06 -->
+          <a href="slide-8.html"
+            class="agenda-item delay-6 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">06</span>
+            <span class="text-[30px] font-medium">Events &amp; Forms</span>
+          </a>
+
+          <!-- 07 -->
+          <a href="slide-9.html"
+            class="agenda-item delay-7 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">07</span>
+            <span class="text-[30px] font-medium">React Hooks</span>
+          </a>
 
           <!-- 08 -->
-          <a href="slide-9.html" class="agenda-item delay-8 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">08</span>
-            <span class="text-base font-medium">React Hooks</span>
+          <a href="slide-10.html"
+            class="agenda-item delay-8 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">08</span>
+            <span class="text-[30px] font-medium">API Integration</span>
           </a>
 
           <!-- 09 -->
-          <a href="slide-10.html" class="agenda-item delay-9 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">09</span>
-            <span class="text-base font-medium">API Integration</span>
+          <a href="slide-11.html"
+            class="agenda-item delay-9 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">09</span>
+            <span class="text-[30px] font-medium">Routing &amp; Navigation</span>
           </a>
 
           <!-- 10 -->
-          <a href="slide-11.html" class="agenda-item delay-10 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">10</span>
-            <span class="text-base font-medium">Routing &amp; Navigation</span>
-          </a>
-
-          <!-- 11 -->
-          <a href="slide-12.html" class="agenda-item delay-11 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">11</span>
-            <span class="text-base font-medium">Context API</span>
-          </a>
-
-          <!-- 12
-          <a href="slide-13.html" class="agenda-item delay-12 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">12</span>
-            <span class="text-base font-medium">Mini Project Demo</span>
-          </a> -->
-
-          <!-- 13 -->
-          <a href="slide-13.html" class="agenda-item delay-13 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">12</span>
-            <span class="text-base font-medium">Journey Summary</span>
-          </a>
-
-          <!-- 14 -->
-          <a href="last.html" class="agenda-item delay-14 flex items-center gap-3.5 px-3 py-1.5 rounded-lg border border-transparent">
-            <span class="agenda-number text-[#61DAFB] text-lg font-bold w-6">13</span>
-            <span class="text-base font-medium">Acknowledgments &amp; Thank You</span>
+          <a href="slide-12.html"
+            class="agenda-item delay-10 flex items-center gap-5 px-5 py-3 rounded-xl border border-transparent">
+            <span class="agenda-number text-[#61DAFB] text-[30px] font-bold w-9">10</span>
+            <span class="text-[30px] font-medium">My Learning &amp; Next Steps</span>
           </a>
 
         </div>
@@ -269,15 +377,17 @@
   </main>
 
   <script>
-    // Intercept agenda links to communicate with index.html presenter
+    // Intercept all agenda link clicks to notify index.html
     document.querySelectorAll('.agenda-item').forEach(item => {
       item.addEventListener('click', function (e) {
         e.preventDefault();
         const targetHref = this.getAttribute('href');
 
+        // Send message to parent presenter (index.html)
         if (window.parent && window.parent !== window) {
           window.parent.postMessage({ action: 'goToSlide', target: targetHref }, '*');
         } else {
+          // Normal fallback if opened standalone
           window.location.href = targetHref;
         }
       });
